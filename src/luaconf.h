@@ -1,5 +1,5 @@
 /*
-** $Id: luaconf.h,v 1.176.1.1 2013/04/12 18:48:47 roberto Exp $
+** $Id: luaconf.h,v 1.160 2011/06/28 17:14:12 roberto Exp $
 ** Configuration file for Lua
 ** See Copyright Notice in lua.h
 */
@@ -28,16 +28,18 @@
 #define LUA_ANSI
 #endif
 
-
+// Don't use windows.
+//
+#if 0
 #if !defined(LUA_ANSI) && defined(_WIN32) && !defined(_WIN32_WCE)
-#define LUA_WIN		/* enable goodies for regular Windows platforms */
+#define LUA_WIN     /* enable goodies for regular Windows platforms */
 #endif
 
 #if defined(LUA_WIN)
 #define LUA_DL_DLL
-#define LUA_USE_AFORMAT		/* assume 'printf' handles 'aA' specifiers */
+#define LUA_USE_AFORMAT     /* assume 'printf' handles 'aA' specifiers */
 #endif
-
+#endif
 
 
 #if defined(LUA_USE_LINUX)
@@ -175,7 +177,7 @@
 ** default definition.
 */
 #if defined(__GNUC__) && ((__GNUC__*100 + __GNUC_MINOR__) >= 302) && \
-    defined(__ELF__)		/* { */
+    defined(__ELF__)        /* { */
 #define LUAI_FUNC	__attribute__((visibility("hidden"))) extern
 #define LUAI_DDEC	LUAI_FUNC
 #define LUAI_DDEF	/* empty */
@@ -211,16 +213,17 @@
 */
 #if defined(LUA_LIB) || defined(lua_c)
 #include <stdio.h>
-#define luai_writestring(s,l)	fwrite((s), sizeof(char), (l), stdout)
-#define luai_writeline()	(luai_writestring("\n", 1), fflush(stdout))
+#define luai_writestring(s,l)   // fwrite((s), sizeof(char), (l), stdout)
+#define luai_writeline()    // (luai_writestring("\n", 1), fflush(stdout))
 #endif
+
 
 /*
 @@ luai_writestringerror defines how to print error messages.
 ** (A format string with one argument is enough for Lua...)
 */
-#define luai_writestringerror(s,p) \
-	(fprintf(stderr, (s), (p)), fflush(stderr))
+#define luai_writestringerror(s,p) //\
+	//(fprintf(stderr, (s), (p)), fflush(stderr))
 
 
 /*
@@ -232,19 +235,21 @@
 #define LUAI_MAXSHORTLEN        40
 
 
-
 /*
 ** {==================================================================
 ** Compatibility with previous versions
 ** ===================================================================
 */
 
+// We don't use previous versions
+//
+#if 0 
 /*
 @@ LUA_COMPAT_ALL controls all compatibility options.
 ** You can define it to get all options, or change specific options
 ** to fit your specific needs.
 */
-#if defined(LUA_COMPAT_ALL)	/* { */
+#if defined(LUA_COMPAT_ALL) /* { */
 
 /*
 @@ LUA_COMPAT_UNPACK controls the presence of global 'unpack'.
@@ -263,9 +268,9 @@
 ** You can call your C function directly (with light C functions).
 */
 #define lua_cpcall(L,f,u)  \
-	(lua_pushcfunction(L, (f)), \
-	 lua_pushlightuserdata(L,(u)), \
-	 lua_pcall(L,1,0,0))
+    (lua_pushcfunction(L, (f)), \
+     lua_pushlightuserdata(L,(u)), \
+     lua_pcall(L,1,0,0))
 
 
 /*
@@ -290,12 +295,12 @@
 ** changes in the API. The macros themselves document how to
 ** change your code to avoid using them.
 */
-#define lua_strlen(L,i)		lua_rawlen(L, (i))
+#define lua_strlen(L,i)     lua_rawlen(L, (i))
 
-#define lua_objlen(L,i)		lua_rawlen(L, (i))
+#define lua_objlen(L,i)     lua_rawlen(L, (i))
 
-#define lua_equal(L,idx1,idx2)		lua_compare(L,(idx1),(idx2),LUA_OPEQ)
-#define lua_lessthan(L,idx1,idx2)	lua_compare(L,(idx1),(idx2),LUA_OPLT)
+#define lua_equal(L,idx1,idx2)      lua_compare(L,(idx1),(idx2),LUA_OPEQ)
+#define lua_lessthan(L,idx1,idx2)   lua_compare(L,(idx1),(idx2),LUA_OPLT)
 
 /*
 @@ LUA_COMPAT_MODULE controls compatibility with previous
@@ -303,7 +308,8 @@
 */
 #define LUA_COMPAT_MODULE
 
-#endif				/* } */
+#endif              /* } */
+#endif
 
 /* }================================================================== */
 
@@ -353,11 +359,8 @@
 ** its only purpose is to stop Lua to consume unlimited stack
 ** space (and to reserve some numbers for pseudo-indices).
 */
-#if LUAI_BITSINT >= 32
-#define LUAI_MAXSTACK		1000000
-#else
-#define LUAI_MAXSTACK		15000
-#endif
+#define LUAI_MAXSTACK		5000
+
 
 /* reserve some space for error handling */
 #define LUAI_FIRSTPSEUDOIDX	(-LUAI_MAXSTACK - 1000)
@@ -404,12 +407,10 @@
 #define lua_number2str(s,n)	sprintf((s), LUA_NUMBER_FMT, (n))
 #define LUAI_MAXNUMBER2STR	32 /* 16 digits, sign, point, and \0 */
 
-
 /*
 @@ l_mathop allows the addition of an 'l' or 'f' to all math operations
 */
-#define l_mathop(x)		(x)
-
+#define l_mathop(x)     (x)
 
 /*
 @@ lua_str2number converts a decimal numeric string to a number.
@@ -433,8 +434,8 @@
 /* the following operations need the math library */
 #if defined(lobject_c) || defined(lvm_c)
 #include <math.h>
-#define luai_nummod(L,a,b)	((a) - l_mathop(floor)((a)/(b))*(b))
-#define luai_numpow(L,a,b)	(l_mathop(pow)(a,b))
+#define luai_nummod(L,a,b)  ((a) - l_mathop(floor)((a)/(b))*(b))
+#define luai_numpow(L,a,b)  (l_mathop(pow)(a,b))
 #endif
 
 /* these are quite standard operations */
@@ -465,13 +466,11 @@
 */
 #define LUA_UNSIGNED	unsigned LUA_INT32
 
-
-
 /*
 ** Some tricks with doubles
 */
 
-#if defined(LUA_NUMBER_DOUBLE) && !defined(LUA_ANSI)	/* { */
+#if defined(LUA_NUMBER_DOUBLE) && !defined(LUA_ANSI)    /* { */
 /*
 ** The next definitions activate some tricks to speed up the
 ** conversion from doubles to integer types, mainly to LUA_UNSIGNED.
@@ -498,10 +497,10 @@
 */
 
 /* Microsoft compiler on a Pentium (32 bit) ? */
-#if defined(LUA_WIN) && defined(_MSC_VER) && defined(_M_IX86)	/* { */
+#if defined(LUA_WIN) && defined(_MSC_VER) && defined(_M_IX86)   /* { */
 
 #define LUA_MSASMTRICK
-#define LUA_IEEEENDIAN		0
+#define LUA_IEEEENDIAN      0
 #define LUA_NANTRICK
 
 
@@ -510,28 +509,28 @@
 
 #define LUA_IEEE754TRICK
 #define LUA_IEEELL
-#define LUA_IEEEENDIAN		0
+#define LUA_IEEEENDIAN      0
 #define LUA_NANTRICK
 
 /* pentium 64 bits? */
-#elif defined(__x86_64)						/* }{ */
+#elif defined(__x86_64)                     /* }{ */
 
 #define LUA_IEEE754TRICK
-#define LUA_IEEEENDIAN		0
+#define LUA_IEEEENDIAN      0
 
-#elif defined(__POWERPC__) || defined(__ppc__)			/* }{ */
+#elif defined(__POWERPC__) || defined(__ppc__)          /* }{ */
 
 #define LUA_IEEE754TRICK
-#define LUA_IEEEENDIAN		1
+#define LUA_IEEEENDIAN      1
 
-#else								/* }{ */
+#else                               /* }{ */
 
 /* assume IEEE754 and a 32-bit integer type */
 #define LUA_IEEE754TRICK
 
-#endif								/* } */
+#endif                              /* } */
 
-#endif							/* } */
+#endif                          /* } */
 
 /* }================================================================== */
 
@@ -548,4 +547,5 @@
 
 
 #endif
+
 
