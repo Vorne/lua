@@ -1,23 +1,15 @@
-####################################################################################################
-#
-# Make lua library
-#
-####################################################################################################
+REPO_ROOT ?= ./..
 
-PROJECT_DIR = .
-BUILD_DIR ?= ../build-internal
-export BUILD_DIR
+include $(REPO_ROOT)/build-internal/makefile.d/base.mk
 
-SOURCE_DIR = $(PROJECT_DIR)/src
-INCLUDE_DIR = $(PROJECT_DIR)/src
+LUA_FILES = $(shell find src -type f)
 
-# Include base makefile after setting directories
-#
--include $(BUILD_DIR)/Makefile.base.mk
+$(OUTPUT_DIR): $(LUA_FILES)
+	mkdir -p $(OUTPUT_DIR)
+	cp -R src/* $(OUTPUT_DIR)
+	cd $(OUTPUT_DIR) && make posix
 
-######################################################################################
-### Local information
+all: $(OUTPUT_DIR)
 
-PROJECT_BASE_NAME = lua
-
-include $(BUILD_DIR)/Makefile.library.mk
+clean:
+	rm -rf $(OUTPUT_DIR)
