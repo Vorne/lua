@@ -6,12 +6,12 @@
 # Your platform. See PLATS for possible values.
 PLAT= none
 
-CC= gcc
+CC= clang-3.5
 CFLAGS= -O2 -Wall -DLUA_COMPAT_ALL $(SYSCFLAGS) $(MYCFLAGS)
 LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
 LIBS= -lm $(SYSLIBS) $(MYLIBS)
 
-AR= ar rcu
+AR= ${TARGET}-ar rcu
 RANLIB= ranlib
 RM= rm -f
 
@@ -115,7 +115,7 @@ mingw:
 	$(MAKE) "LUAC_T=luac.exe" luac.exe
 
 posix:
-	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_POSIX"
+	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_POSIX $(TARGETFLAGS) $(SYS_INCLUDE_PATH)" SYSLDFLAGS="$(TARGETFLAGS)"
 
 solaris:
 	$(MAKE) $(ALL) SYSCFLAGS="-DLUA_USE_POSIX -DLUA_USE_DLOPEN" SYSLIBS="-ldl"
