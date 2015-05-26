@@ -3,6 +3,12 @@
 
 # == CHANGE THE SETTINGS BELOW TO SUIT YOUR ENVIRONMENT =======================
 
+BUILD_PREFIX=
+
+ifneq ($(TARGET),)
+    BUILD_PREFIX = "$(TARGET)-"
+endif
+
 # Your platform. See PLATS for possible values.
 PLAT= none
 
@@ -11,8 +17,8 @@ CFLAGS= -O2 -Wall -DLUA_COMPAT_ALL $(SYSCFLAGS) $(MYCFLAGS)
 LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
 LIBS= -lm $(SYSLIBS) $(MYLIBS)
 
-AR= ${TARGET}-ar rcu
-RANLIB= ranlib
+AR= ${BUILD_PREFIX}ar rcu
+RANLIB= ${BUILD_PREFIX}ranlib
 RM= rm -f
 
 SYSCFLAGS=
