@@ -17,6 +17,8 @@
 *.exe
 *.out
 *.app
+src/lua
+src/luac
 
 # Dependencies
 depend
