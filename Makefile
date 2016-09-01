@@ -1,6 +1,6 @@
 REPO_ROOT ?= ./..
 
-include $(REPO_ROOT)/build-internal/makefile.d/base.mk
+include $(REPO_ROOT)/xl/makefile.d/base.mk
 
 LUA_FILES = $(shell find src -type f)
 
